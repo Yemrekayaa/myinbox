@@ -1,0 +1,25 @@
+.buttonHoverStretch {
+    display: inline-block;
+    width: 150px;
+    transition: width 0.3s ease;
+    text-align: right!important;
+}
+
+.buttonHoverStretch:hover {
+    width: 160px; 
+}
+
+.fade-in {
+    animation: fadeInUp 0.3s ease forwards;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

@@ -141,32 +141,53 @@ sap.ui.define([
             oVizFrame.vizSelection(aFilteredData, { clearSelection: true });
 
         },
-        onVizFrameSelectData: function (oEvent) {
-            var sSelectedData = oEvent.getParameter("data")[0].data.Surec.split(" / ")[1];
-            var oModelData = this.getView().getModel("filterList").getProperty("/surec");
+        onFilterBarSearch: function (oEvent) {
+            var oFilterBar = this.byId("filterbar");
+            var oModel = this.getView().getModel("filterList");
+            var selectedSurec = oModel.getProperty("/surec");
 
-            if (oModelData.indexOf(sSelectedData) === -1) {
+            var oTable = this.byId("idTable");
 
-                oModelData.push(sSelectedData);
-                this.getView().getModel("filterList").setProperty("/surec", oModelData);
-                this.getView().getModel("filterList").refresh(true);
+            var aFilters = [];
+            var aSurecFilters = [];
+
+            if (selectedSurec && selectedSurec.length > 0) {
+                selectedSurec.forEach(function (surec) {
+                    var oSurecFilter = new sap.ui.model.Filter("Surec", sap.ui.model.FilterOperator.EQ, surec);
+                    aSurecFilters.push(oSurecFilter);
+                });
             }
+            if (aSurecFilters.length > 0) {
+                var oSurecFinalFilter = new sap.ui.model.Filter(aSurecFilters, false);
+                aFilters.push(oSurecFinalFilter);
+            }
+
+            
+                var oFinalFilter = new sap.ui.model.Filter(aFilters, true);
+
+                var oBinding = oTable.getBinding("items");
+                oBinding.filter(oFinalFilter);
+            
+
         },
-        onVizFrameDeselectData: function (oEvent) {
-            var sDeselectedData = oEvent.getParameter("data")[0].data.Surec.split(" / ")[1];
-            var oModelData = this.getView().getModel("filterList").getProperty("/surec");
-
-
-            var iIndex = oModelData.indexOf(sDeselectedData);
-            if (iIndex !== -1) {
-
-                oModelData.splice(iIndex, 1);
-                this.getView().getModel("filterList").setProperty("/surec", oModelData);
-                this.getView().getModel("filterList").refresh(true);
-            }
+        onUpdateFinished: function () {
+            const oTable = this.byId("idTable");
+            const oItems = oTable.getItems();
+        
+            oItems.forEach((item) => {
+                const domRef = item.getDomRef();
+                if (domRef) {
+                    domRef.classList.add("fade-in");
+        
+                    
+                    setTimeout(() => {
+                        domRef.classList.remove("fade-in");
+                    }, 400);
+                }
+            });
         },
         dayFormatter: function (text) {
             return text + " gün";
-        },
+        }
     });
 });

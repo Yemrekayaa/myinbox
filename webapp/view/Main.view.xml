@@ -21,8 +21,6 @@
                     }"
                     vizType="pie"
                     width="100%"
-                    selectData="onVizFrameSelectData"
-                    deselectData="onVizFrameDeselectData"
                 >
                     <viz:dataset>
                         <viz.data:FlattenedDataset data="{
@@ -61,6 +59,7 @@
                     id="filterbar"
                     persistencyKey="myPersKey"
                     useToolbar="false"
+                    search="onFilterBarSearch"
                 >
                     <fb:filterGroupItems>
                         <fb:FilterGroupItem
@@ -78,7 +77,7 @@
                                         }
                                     }"
                                     selectedKeys="{filterList>/surec}"
-                                    selectionChange="onSurecSelectionChange"
+                                    selectionFinish="onSurecSelectionChange"
                                 >
                                     <core:Item
                                         key="{filterList>key}"
@@ -90,10 +89,12 @@
                     </fb:filterGroupItems>
                 </fb:FilterBar>
                 <Table
-                    id="idMobileTable"
+                    id="idTable"
                     items="{
                         path: 'mainModel>/surecListesi'
                     }"
+                    alternateRowColors="true"
+                    updateFinished="onUpdateFinished"
                 >
                     <columns>
                         <Column>
@@ -130,6 +131,8 @@
                                     press="onPressOpenLink"
                                     icon="sap-icon://navigation-right-arrow"
                                     iconFirst="false"
+                                    class="buttonHoverStretch"
+                                    type="Emphasized"
                                 />
                             </cells>
                         </ColumnListItem>
