@@ -1,0 +1,141 @@
+<mvc:View
+    controllerName="ronesans.myinbox.controller.Main"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:viz="sap.viz.ui5.controls"
+    xmlns:viz.data="sap.viz.ui5.data"
+    xmlns:viz.feeds="sap.viz.ui5.controls.common.feeds"
+    xmlns="sap.m"
+    xmlns:fb="sap.ui.comp.filterbar"
+    xmlns:core="sap.ui.core"
+>
+    <Page
+        id="page"
+        title="Süreçler"
+    >
+        <content>
+            <VBox class="sapUiSmallMargin">
+                <viz:VizFrame
+                    id="idVizFrame"
+                    uiConfig="{
+                        applicationSet: 'fiori'
+                    }"
+                    vizType="pie"
+                    width="100%"
+                    selectData="onVizFrameSelectData"
+                    deselectData="onVizFrameDeselectData"
+                >
+                    <viz:dataset>
+                        <viz.data:FlattenedDataset data="{
+                            path: 'mainModel>/pieList'
+                        }">
+                            <viz.data:dimensions>
+                                <viz.data:DimensionDefinition
+                                    name="Surec"
+                                    value="{mainModel>Surec}"
+                                />
+                            </viz.data:dimensions>
+                            <viz.data:measures>
+                                <viz.data:MeasureDefinition
+                                    name="Toplam"
+                                    value="{mainModel>Toplam}"
+                                />
+                            </viz.data:measures>
+                        </viz.data:FlattenedDataset>
+                    </viz:dataset>
+                    <viz:feeds>
+                        <viz.feeds:FeedItem
+                            uid="size"
+                            type="Measure"
+                            values="Toplam"
+                        />
+                        <viz.feeds:FeedItem
+                            uid="color"
+                            type="Dimension"
+                            values="Surec"
+                        />
+                    </viz:feeds>
+                </viz:VizFrame>
+            </VBox>
+            <VBox class="sapUiSmallMargin">
+                <fb:FilterBar
+                    id="filterbar"
+                    persistencyKey="myPersKey"
+                    useToolbar="false"
+                >
+                    <fb:filterGroupItems>
+                        <fb:FilterGroupItem
+                            name="Süreç"
+                            label="Süreç"
+                            groupName="Group1"
+                            visibleInFilterBar="true"
+                        >
+                            <fb:control>
+                                <MultiComboBox
+                                    items="{
+                                        path: 'filterList>/surecList',
+                                        sorter: {
+                                            path: 'Name'
+                                        }
+                                    }"
+                                    selectedKeys="{filterList>/surec}"
+                                    selectionChange="onSurecSelectionChange"
+                                >
+                                    <core:Item
+                                        key="{filterList>key}"
+                                        text="{filterList>value}"
+                                    />
+                                </MultiComboBox>
+                            </fb:control>
+                        </fb:FilterGroupItem>
+                    </fb:filterGroupItems>
+                </fb:FilterBar>
+                <Table
+                    id="idMobileTable"
+                    items="{
+                        path: 'mainModel>/surecListesi'
+                    }"
+                >
+                    <columns>
+                        <Column>
+                            <Text text="Süreç" />
+                        </Column>
+                        <Column
+                            minScreenWidth="Desktop"
+                            demandPopin="true"
+                        >
+                            <Text text="Açıklama" />
+                        </Column>
+                        <Column
+                            minScreenWidth="Desktop"
+                            demandPopin="true"
+                            hAlign="Center"
+                        >
+                            <Text text="Bekleme Süresi" />
+                        </Column>
+                        <Column hAlign="End">
+                            <Text text="" />
+                        </Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem>
+                            <cells>
+                                <Text text="{mainModel>Surec}" />
+                                <Text text="{mainModel>Aciklama}" />
+                                <Text text="{
+                                    path: 'mainModel>Beklemesuresi',
+                                    formatter: '.dayFormatter'
+                                }" />
+                                <Button
+                                    text="Onay Ekranına Git"
+                                    press="onPressOpenLink"
+                                    icon="sap-icon://navigation-right-arrow"
+                                    iconFirst="false"
+                                />
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+            </VBox>
+        </content>
+    </Page>
+</mvc:View>
