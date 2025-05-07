@@ -37,7 +37,6 @@ sap.ui.define([
                     }
                 }
 
-
             });
         },
         onTableInit: function () {
@@ -82,7 +81,13 @@ sap.ui.define([
             oModel.read("/MyInboxFullListSet", {
                 filters: [oFilter],
                 success: function (data) {
-                    this.getView().getModel("mainModel").setProperty("/surecListesi", data.results);
+                    var aResults = data.results;
+
+
+                    aResults.sort(function (a, b) {
+                        return a.Beklemesuresi.localeCompare(b.Beklemesuresi);
+                    });
+                    this.getView().getModel("mainModel").setProperty("/surecListesi", aResults);
                     this.setChartData();
                     this.setFilterData();
                 }.bind(this),
@@ -119,7 +124,7 @@ sap.ui.define([
                 MessageToast.show("Link bulunamadı.");
             }
         },
-        onSurecSelectionChange: function (oEvent) {
+        onSurecSelectionChange: function () {
             var aSelectedSurec = this.getView().getModel("filterList").getProperty("/surec");
             var aAllData = this.getView().getModel("mainModel").getProperty("/pieList");
 
@@ -162,24 +167,34 @@ sap.ui.define([
                 aFilters.push(oSurecFinalFilter);
             }
 
-            
-                var oFinalFilter = new sap.ui.model.Filter(aFilters, true);
 
-                var oBinding = oTable.getBinding("items");
-                oBinding.filter(oFinalFilter);
-            
+            var oFinalFilter = new sap.ui.model.Filter(aFilters, true);
 
+            var oBinding = oTable.getBinding("items");
+            oBinding.filter(oFinalFilter);
+
+
+        },
+        onFilterBarClear: function () {
+            var oModel = this.getView().getModel("filterList");
+            var oTable = this.byId("idTable");
+
+            oModel.setProperty("/surec", []);
+            this.onSurecSelectionChange();
+
+            var oBinding = oTable.getBinding("items");
+            oBinding.filter([]);
         },
         onUpdateFinished: function () {
             const oTable = this.byId("idTable");
             const oItems = oTable.getItems();
-        
+
             oItems.forEach((item) => {
                 const domRef = item.getDomRef();
                 if (domRef) {
                     domRef.classList.add("fade-in");
-        
-                    
+
+
                     setTimeout(() => {
                         domRef.classList.remove("fade-in");
                     }, 400);

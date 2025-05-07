@@ -2,11 +2,11 @@
     display: inline-block;
     width: 150px;
     transition: width 0.3s ease;
-    text-align: right!important;
+    text-align: right !important;
 }
 
 .buttonHoverStretch:hover {
-    width: 160px; 
+    width: 160px;
 }
 
 .fade-in {
@@ -18,8 +18,17 @@
         opacity: 0;
         transform: translateY(10px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+.v-plot-main g {
+    pointer-events: none;
+}
+
+.v-m-legend g {
+    pointer-events: none;
 }

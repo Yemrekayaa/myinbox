@@ -60,6 +60,9 @@
                     persistencyKey="myPersKey"
                     useToolbar="false"
                     search="onFilterBarSearch"
+                    showFilterConfiguration="false"
+                    showClearOnFB="true"
+                    clear="onFilterBarClear"
                 >
                     <fb:filterGroupItems>
                         <fb:FilterGroupItem
@@ -77,7 +80,7 @@
                                         }
                                     }"
                                     selectedKeys="{filterList>/surec}"
-                                    selectionFinish="onSurecSelectionChange"
+                                    selectionChange="onSurecSelectionChange"
                                 >
                                     <core:Item
                                         key="{filterList>key}"
